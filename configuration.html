@@ -13,6 +13,17 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .users select{
+            font-size: 3em;
+        }
+        .users label{
+            font-size: 3em;
+        }
+        .pad-right{
+            padding-right: 10px;
+        }
+    </style>
 </head>
 
 <body onload="getEntityData()">
@@ -45,10 +56,11 @@
 
 <script>
     var entityNameArray = [];
+    var userNameArray = [];
 
     function getEntityData() {
-        var entityData;
-        var xhr = new XMLHttpRequest();
+        let entityData;
+        let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 entityData = JSON.parse(this.responseText);
@@ -59,14 +71,38 @@
         xhr.send();
         // Next get all the entity names from the json array
     };
+
+    function getSystemUsers(){
+        let systemUsers;
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                systemUsers = JSON.parse(this.responseText);
+                getUserNames(systemUsers);
+            }
+        };
+        xhr.open("GET", "https://superamazintestbox.crm.dynamics.com/api/data/v9.1/systemusers");
+        xhr.send();
+    }
     // collects 
     function getEntityNames(entityData) {
-        var value = entityData["value"];
+        let value = entityData["value"];
         for (keys in value) {
-            var logicalName = value[keys]['LogicalName'];
+            let logicalName = value[keys]['LogicalName'];
             entityNameArray.push(logicalName);
         }
     };
+
+    function getUserNames(systemUsers){
+        let value = systemUsers["value"];
+        for (keys in value){
+            let userID = value[keys]['systemuserid'];
+            let userName = value[keys]['fullname'];
+            let userObject = {"systemuserID": `${userID}`, "userName": `${userName}`};
+            userNameArray.push(userObject);
+        }
+    };
+
 </script>
 
 </html>
