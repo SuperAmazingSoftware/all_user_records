@@ -1,0 +1,50 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+</head>
+
+<body onload="getEntityData()">
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4" align="center">User Record Finder</h1>
+            <p class="lead">This utility will help you locate all records own by a user as well as a breakdown of the entity type of those records.</p>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <p id="users"></p>
+        </div>
+      </div>
+</body>
+<script>
+    var entityNameArray = [];
+    function getEntityData(){
+        var entityData;
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            entityData = JSON.parse(this.responseText);
+            getEntityNames(entityData);
+        }
+    };
+    xhr.open("GET", "https://superamazintestbox.crm.dynamics.com/api/data/v9.1/EntityDefinitions");
+    xhr.send();
+    // Next get all the entity names from the json array
+    };
+    // collects 
+    function getEntityNames(entityData){
+        var value = entityData["value"];
+        for(keys in value){
+            var logicalName = value[keys]['LogicalName'];
+            entityNameArray.push(logicalName);           
+        }    
+    };
+</script>
+</html>
