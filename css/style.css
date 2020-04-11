@@ -1,0 +1,11 @@
+.users label {
+    font-size: 5em;
+}
+
+.users select {
+    font-size: 3em;
+}
+
+.pad-right {
+    padding-right: 10px;
+}

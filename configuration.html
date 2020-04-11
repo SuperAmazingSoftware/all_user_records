@@ -1,50 +1,72 @@
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/materia/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1tymk6x9Y5K+OF0tlmG2fDRcn67QGzBkiM3IgtJ3VrtGrIi5ryhHjKjeeS60f1FA" crossorigin="anonymous">
 
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-<!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
 <body onload="getEntityData()">
     <div class="container">
         <div class="jumbotron">
             <h1 class="display-4" align="center">User Record Finder</h1>
-            <p class="lead">This utility will help you locate all records own by a user as well as a breakdown of the entity type of those records.</p>
+            <p class="lead">This utility will help identify all records owned by a user as well as provide a breakdown
+                of the entity type of those records.</p>
         </div>
         <div class="row">
-          <div class="col-md-4">
-            <p id="users"></p>
+            <div class="col">
+                <form>
+                    <div class="form-group users">
+                        <label for="select-user"><i class="fas fa-user pad-right"></i>Select the user for your
+                            report</label>
+                        <select class="form-control" id="select-user">
+                            <option>John Smith</option>
+                            <option>Joe Walsh</option>
+                            <option>Kirk Hammet</option>
+                            <option>Susan Summers</option>
+                            <option>Joan Baez</option>
+                        </select>
+                    </div>
+            </div>
+            </form>
         </div>
-      </div>
+    </div>
 </body>
+<script src="https://kit.fontawesome.com/e1c53c4bb6.js" crossorigin="anonymous"></script>
+
 <script>
     var entityNameArray = [];
-    function getEntityData(){
+
+    function getEntityData() {
         var entityData;
         var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function(){
-        if(this.readyState == 4 && this.status == 200){
-            entityData = JSON.parse(this.responseText);
-            getEntityNames(entityData);
-        }
-    };
-    xhr.open("GET", "https://superamazintestbox.crm.dynamics.com/api/data/v9.1/EntityDefinitions");
-    xhr.send();
-    // Next get all the entity names from the json array
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                entityData = JSON.parse(this.responseText);
+                getEntityNames(entityData);
+            }
+        };
+        xhr.open("GET", "https://superamazintestbox.crm.dynamics.com/api/data/v9.1/EntityDefinitions");
+        xhr.send();
+        // Next get all the entity names from the json array
     };
     // collects 
-    function getEntityNames(entityData){
+    function getEntityNames(entityData) {
         var value = entityData["value"];
-        for(keys in value){
+        for (keys in value) {
             var logicalName = value[keys]['LogicalName'];
-            entityNameArray.push(logicalName);           
-        }    
+            entityNameArray.push(logicalName);
+        }
     };
 </script>
+
 </html>
