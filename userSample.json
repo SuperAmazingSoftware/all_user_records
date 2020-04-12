@@ -1,0 +1,197 @@
+{
+  "@odata.context": "https://collab2-dev.crm.dynamics.com/api/data/v9.1/$metadata#systemusers(systemuserid,fullname)",
+  "value": [
+    {
+      "@odata.etag": "W/\"2496693\"",
+      "systemuserid": "e44a0ea9-db7b-ea11-a816-000d3a8c95ff",
+      "fullname": "Power Platform Dataflows CDS Client",
+      "ownerid": "e44a0ea9-db7b-ea11-a816-000d3a8c95ff"
+    },
+    {
+      "@odata.etag": "W/\"2496696\"",
+      "systemuserid": "3932ef83-dd7b-ea11-a816-000d3a8c95ff",
+      "fullname": "PowerApps Checker Application",
+      "ownerid": "3932ef83-dd7b-ea11-a816-000d3a8c95ff"
+    },
+    {
+      "@odata.etag": "W/\"2496699\"",
+      "systemuserid": "6f9c5637-e87b-ea11-a816-000d3a8c95ff",
+      "fullname": "Microsoft Forms Pro",
+      "ownerid": "6f9c5637-e87b-ea11-a816-000d3a8c95ff"
+    },
+    {
+      "@odata.etag": "W/\"2496514\"",
+      "systemuserid": "f068f5b8-c3f2-48fa-a6f4-08e500c24d57",
+      "fullname": "Ty Calrson (Sample Data)",
+      "ownerid": "f068f5b8-c3f2-48fa-a6f4-08e500c24d57"
+    },
+    {
+      "@odata.etag": "W/\"2496521\"",
+      "systemuserid": "63cbd852-f88a-4195-96ab-17a14d8e992c",
+      "fullname": "Demo User",
+      "ownerid": "63cbd852-f88a-4195-96ab-17a14d8e992c"
+    },
+    {
+      "@odata.etag": "W/\"2496528\"",
+      "systemuserid": "2f9cf351-2a9f-425d-a292-1a17dddc8183",
+      "fullname": "Christa Geller (Sample Data)",
+      "ownerid": "2f9cf351-2a9f-425d-a292-1a17dddc8183"
+    },
+    {
+      "@odata.etag": "W/\"2496535\"",
+      "systemuserid": "cb9e927e-6990-418d-8959-1a321ccff582",
+      "fullname": "Dan Jump (Sample Data)",
+      "ownerid": "cb9e927e-6990-418d-8959-1a321ccff582"
+    },
+    {
+      "@odata.etag": "W/\"2477066\"",
+      "systemuserid": "6d86842c-3d4f-4c5d-9fe8-245c3b9e50eb",
+      "fullname": "Support User",
+      "ownerid": "6d86842c-3d4f-4c5d-9fe8-245c3b9e50eb"
+    },
+    {
+      "@odata.etag": "W/\"2496542\"",
+      "systemuserid": "93ed8cf7-714c-4a7b-92e1-298e796d6188",
+      "fullname": "Allie Bellew (Sample Data)",
+      "ownerid": "93ed8cf7-714c-4a7b-92e1-298e796d6188"
+    },
+    {
+      "@odata.etag": "W/\"2496549\"",
+      "systemuserid": "a26bbe8c-5988-4dc0-bc06-2f0482247973",
+      "fullname": "David So (Sample Data)",
+      "ownerid": "a26bbe8c-5988-4dc0-bc06-2f0482247973"
+    },
+    {
+      "@odata.etag": "W/\"2496556\"",
+      "systemuserid": "3b28cf17-1138-4263-bc57-38d4a27c8cfc",
+      "fullname": "Sanjay Shaw (Sample Data)",
+      "ownerid": "3b28cf17-1138-4263-bc57-38d4a27c8cfc"
+    },
+    {
+      "@odata.etag": "W/\"2477458\"",
+      "systemuserid": "fca65477-2861-41fe-89e6-3cc64d2edf66",
+      "fullname": "Delegated Admin",
+      "ownerid": "fca65477-2861-41fe-89e6-3cc64d2edf66"
+    },
+    {
+      "@odata.etag": "W/\"2496563\"",
+      "systemuserid": "1701bf0f-7214-4edd-8ded-3e44ca0b2d25",
+      "fullname": "Diane Prescott (Sample Data)",
+      "ownerid": "1701bf0f-7214-4edd-8ded-3e44ca0b2d25"
+    },
+    {
+      "@odata.etag": "W/\"2496570\"",
+      "systemuserid": "5b7d16cb-93ae-4592-83ea-48e1ec526be8",
+      "fullname": "Anne Weiler (Sample Data)",
+      "ownerid": "5b7d16cb-93ae-4592-83ea-48e1ec526be8"
+    },
+    {
+      "@odata.etag": "W/\"2496577\"",
+      "systemuserid": "ebafd14a-e272-4fd8-800e-4c4b253b9c27",
+      "fullname": "Julian Isla (Sample Data)",
+      "ownerid": "ebafd14a-e272-4fd8-800e-4c4b253b9c27"
+    },
+    {
+      "@odata.etag": "W/\"2497144\"",
+      "systemuserid": "6ae17872-1f42-4106-8e2b-4e2155de76e0",
+      "fullname": "--- ---",
+      "ownerid": "6ae17872-1f42-4106-8e2b-4e2155de76e0"
+    },
+    {
+      "@odata.etag": "W/\"2496592\"",
+      "systemuserid": "083c4979-47ef-4e3c-9d03-5594935ec093",
+      "fullname": "Molly Clark (Sample Data)",
+      "ownerid": "083c4979-47ef-4e3c-9d03-5594935ec093"
+    },
+    {
+      "@odata.etag": "W/\"2496601\"",
+      "systemuserid": "f7da7474-7a3c-4dd6-97c7-57e48574390f",
+      "fullname": "Sven Mortensen (Sample Data)",
+      "ownerid": "f7da7474-7a3c-4dd6-97c7-57e48574390f"
+    },
+    {
+      "@odata.etag": "W/\"2496608\"",
+      "systemuserid": "50988de4-0644-4719-9ee6-59373f749dd5",
+      "fullname": "Karen Berg (Sample Data)",
+      "ownerid": "50988de4-0644-4719-9ee6-59373f749dd5"
+    },
+    {
+      "@odata.etag": "W/\"2496615\"",
+      "systemuserid": "e8a9f87d-2886-4447-b8ea-5db83e075f42",
+      "fullname": "Alan Steiner (Sample Data)",
+      "ownerid": "e8a9f87d-2886-4447-b8ea-5db83e075f42"
+    },
+    {
+      "@odata.etag": "W/\"2496622\"",
+      "systemuserid": "3bbe3f3a-7234-4f11-9190-749964b49684",
+      "fullname": "Kelly Krout (Sample Data)",
+      "ownerid": "3bbe3f3a-7234-4f11-9190-749964b49684"
+    },
+    {
+      "@odata.etag": "W/\"2351340\"",
+      "systemuserid": "15ba9ded-c718-463f-acb3-79953cde82bd",
+      "fullname": "SYSTEM",
+      "ownerid": "15ba9ded-c718-463f-acb3-79953cde82bd"
+    },
+    {
+      "@odata.etag": "W/\"2496629\"",
+      "systemuserid": "c9696dec-2f73-4c5c-8c57-9732273b09cb",
+      "fullname": "Renee Lo (Sample Data)",
+      "ownerid": "c9696dec-2f73-4c5c-8c57-9732273b09cb"
+    },
+    {
+      "@odata.etag": "W/\"2497903\"",
+      "systemuserid": "d436b94f-7204-436e-892e-9a2b2654b2cc",
+      "fullname": "Trenton Maberry",
+      "ownerid": "d436b94f-7204-436e-892e-9a2b2654b2cc"
+    },
+    {
+      "@odata.etag": "W/\"2496636\"",
+      "systemuserid": "c80d61c5-97de-4005-a96b-b5e74ed3fa15",
+      "fullname": "Eric Gruber (Sample Data)",
+      "ownerid": "c80d61c5-97de-4005-a96b-b5e74ed3fa15"
+    },
+    {
+      "@odata.etag": "W/\"2496643\"",
+      "systemuserid": "ab4035f2-ef55-40bd-825a-cc2e975048c8",
+      "fullname": "Veronica Quek (Sample Data)",
+      "ownerid": "ab4035f2-ef55-40bd-825a-cc2e975048c8"
+    },
+    {
+      "@odata.etag": "W/\"2496650\"",
+      "systemuserid": "02e1caea-79bb-4802-b852-ccc7959d8fce",
+      "fullname": "Greg Winston (Sample Data)",
+      "ownerid": "02e1caea-79bb-4802-b852-ccc7959d8fce"
+    },
+    {
+      "@odata.etag": "W/\"2351341\"",
+      "systemuserid": "48218b30-0db3-4637-9143-d0e9e27457ff",
+      "fullname": "INTEGRATION",
+      "ownerid": "48218b30-0db3-4637-9143-d0e9e27457ff"
+    },
+    {
+      "@odata.etag": "W/\"2496657\"",
+      "systemuserid": "122e35f1-4910-4c19-b8c9-e4b5df6fa5f7",
+      "fullname": "Alicia Thomber (Sample Data)",
+      "ownerid": "122e35f1-4910-4c19-b8c9-e4b5df6fa5f7"
+    },
+    {
+      "@odata.etag": "W/\"2496664\"",
+      "systemuserid": "088fc744-92f8-4405-911a-e5efd1488f68",
+      "fullname": "Jamie Reding (Sample Data)",
+      "ownerid": "088fc744-92f8-4405-911a-e5efd1488f68"
+    },
+    {
+      "@odata.etag": "W/\"2496671\"",
+      "systemuserid": "6d7a9b36-0e5d-4ca2-8342-ef2b5a6638ee",
+      "fullname": "Jeff Hay (Sample Data)",
+      "ownerid": "6d7a9b36-0e5d-4ca2-8342-ef2b5a6638ee"
+    },
+    {
+      "@odata.etag": "W/\"2496678\"",
+      "systemuserid": "7b2d4604-61ae-4c3f-a8a4-fab16536be13",
+      "fullname": "Spencer Low (Sample Data)",
+      "ownerid": "7b2d4604-61ae-4c3f-a8a4-fab16536be13"
+    }
+  ]
+}
