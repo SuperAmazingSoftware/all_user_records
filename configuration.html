@@ -37,7 +37,7 @@
     </style>
 </head>
 
-<body onload="getEntityData()">
+<body>
     <div class="container">
         <div class="jumbotron">
             <h1 class="display-4" align="center">User Record Finder</h1>
@@ -90,24 +90,36 @@
             $("#select-entity").empty();
 
             let entityData;
+            let userData;
+
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     entityData = JSON.parse(this.responseText);
                     entityData = entityData.value;
+                   
                     $(entityData).each(function (index, element) {
                         entityNameArray.push(element.DisplayName.LocalizedLabels[0].Label);
                     });
-                    entityNameArray.sort();
+
                     for (var i = 0; i <= entityNameArray.length; i++){
                         $("#select-entity").append(new Option(entityNameArray[i]));
                         // make sure to create the JSON object, push it to the entityName Array, iterate the array, extract the values, and pass them to each new Option object)
                         // $("#select-entity").append(new Option(entityNameArray[i].DisplayName.LocalizedLabels[0].Label, entityNameArray[i].EntitySetName));
                     }
+
+                    entityNameArray.sort();   
+
+                  
+    
                 }
             };
             xhr.open("GET", "https://supertestinc.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'");
             xhr.send();
+
+            getSystemUsers(populateUserNames);
+
+         
         });
     });
 
@@ -131,13 +143,14 @@
         // Next get all the entity names from the json array
     };
 
-    function getSystemUsers() {
+    function getSystemUsers(callback) {
         let systemUsers;
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 systemUsers = JSON.parse(this.responseText);
-                getUserNames(systemUsers);
+                fetchUsers(systemUsers);
+                callback(systemUsers);
             }
         };
         xhr.open("GET", "https://supertestinc.crm.dynamics.com/api/data/v9.1/systemusers");
@@ -152,7 +165,7 @@
         }
     };
 
-    function getUserNames(systemUsers) {
+    function fetchUsers(systemUsers) {
         let value = systemUsers["value"];
         for (keys in value) {
             let userID = value[keys]['systemuserid'];
@@ -161,6 +174,14 @@
             userNameArray.push(userObject);
         }
     };
+
+    function populateUserNames(userData){
+        for(var o = 0; o<userData.value.length; o++){
+                $("#select-user").append(new Option(userNameArray[o].userName,userNameArray[o].systemuserID));
+        }
+    }
+
+
 
 </script>
 
