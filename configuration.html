@@ -26,7 +26,10 @@
             padding-right: 10px;
         }
         option{
-            font-size: 3em;
+            font-size: 1.5em;
+        }
+        .form-control{
+            font-size: 1.5em;
         }
     </style>
 </head>
@@ -90,14 +93,18 @@
                     entityData = entityData.value;
                     $(entityData).each(function (index, element) {
                         entityNameArray.push(element.DisplayName.LocalizedLabels[0].Label);
-                        $("#select-entity").append(new Option(element.DisplayName.LocalizedLabels[0].Label, element.EntitySetName));
                     });
+                    entityNameArray.sort();
+                    for (var i = 0; i <= entityNameArray.length; i++){
+                        $("#select-entity").append(new Option(entityNameArray[i]));
+                        // make sure to create the JSON object, push it to the entityName Array, iterate the array, extract the values, and pass them to each new Option object)
+                        // $("#select-entity").append(new Option(entityNameArray[i].DisplayName.LocalizedLabels[0].Label, entityNameArray[i].EntitySetName));
+                    }
                 }
             };
             xhr.open("GET", "https://superamazintestbox.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'");
             xhr.send();
         });
-
     });
 
     function getUserOwnedEntities() {
