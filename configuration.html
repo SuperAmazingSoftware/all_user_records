@@ -2,6 +2,11 @@
 
 <head>
     <meta charset="utf-8">
+
+    <!--Reference to ClientGlobalContext.js.aspx-->
+    <script src="../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+
+
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="Styles/stylesheet.css">
@@ -14,13 +19,15 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style>
-        .users select{
+        .users select {
             font-size: 3em;
         }
-        .users label{
+
+        .users label {
             font-size: 3em;
         }
-        .pad-right{
+
+        .pad-right {
             padding-right: 10px;
         }
     </style>
@@ -47,8 +54,8 @@
                             <option>Joan Baez</option>
                         </select>
                     </div>
+                </form>
             </div>
-            </form>
         </div>
     </div>
 </body>
@@ -57,6 +64,11 @@
 <script>
     var entityNameArray = [];
     var userNameArray = [];
+
+    $(document).ready(function () {
+
+
+    });
 
     function getEntityData() {
         let entityData;
@@ -72,7 +84,7 @@
         // Next get all the entity names from the json array
     };
 
-    function getSystemUsers(){
+    function getSystemUsers() {
         let systemUsers;
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
@@ -93,12 +105,12 @@
         }
     };
 
-    function getUserNames(systemUsers){
+    function getUserNames(systemUsers) {
         let value = systemUsers["value"];
-        for (keys in value){
+        for (keys in value) {
             let userID = value[keys]['systemuserid'];
             let userName = value[keys]['fullname'];
-            let userObject = {"systemuserID": `${userID}`, "userName": `${userName}`};
+            let userObject = { "systemuserID": `${userID}`, "userName": `${userName}` };
             userNameArray.push(userObject);
         }
     };

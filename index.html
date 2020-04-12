@@ -80,12 +80,14 @@
 
     $(document).ready(function () {
 
+        // https://superamazintestbox.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType%20eq%20Microsoft.Dynamics.CRM.OwnershipTypes%27UserOwned%27
 
         $("#getSampleData").click(function () {
             $.getJSON("entitySample.json", function (json) {
                 sampleDataArray = json.value;
 
                 $("#select-entity").empty();
+
 
                 $(sampleDataArray).each(function (index, element) {
                     displayNameArray.push(element.DisplayName.LocalizedLabels[0].Label);
