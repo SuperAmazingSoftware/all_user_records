@@ -1,4 +1,4 @@
-<html lang="en">
+﻿<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -39,18 +39,30 @@
 
 <body onload="getEntityData()">
     <div class="container">
-        <div class="jumbotron">
-            <h1 class="display-4" align="center">User Record Finder</h1>
-            <p class="lead">This utility will help identify all records owned by a user as well as provide a breakdown
-                of the entity type of those records.</p>
+        <!--Change from class="jumbotron to below jumbotron-->
+        <!--class="jumbotron p-4 p-md-5 text-white rounded bg-dark"-->
+        <!--.text-white {
+            color: #fff!important;
+            }
+            -->
+        <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
+            <!--Change to color-->
+            <h1 class="display-4" align="center" color="#fff!important">User Record Finder</h1>
+            <!--Seeing difference in white for p and h1-->
+            <p class="lead" color="white">
+                This utility will help identify all records owned by a user as well as provide a breakdown
+                of the entity type of those records.
+            </p>
             <button id="loadOrgData">Load Org Data</button>
         </div>
         <div class="row">
             <div class="col">
                 <form>
                     <div class="form-group users">
-                        <label for="select-user"><i class="fas fa-user pad-right"></i>Select the user for your
-                            report</label>
+                        <label for="select-user">
+                            <i class="fas fa-user pad-right"></i>Select the user for your
+                            report
+                        </label>
                         <select class="form-control" id="select-user">
                         </select>
                     </div>
@@ -61,10 +73,11 @@
             <div class="col">
                 <form>
                     <div class="form-group entities">
-                        <label for="select-entity"><i class="fas fa-user pad-right"></i>Select the entity for your
-                            report</label>
+                        <label for="select-entity">
+                            <i class="fas fa-user pad-right"></i>Select the entity for your
+                            report
+                        </label>
                         <select class="form-control" id="select-entity">
-
                         </select>
                     </div>
                 </form>
