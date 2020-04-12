@@ -14,13 +14,15 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style>
-        .users select{
+        .users select {
             font-size: 3em;
         }
-        .users label{
+
+        .users label {
             font-size: 3em;
         }
-        .pad-right{
+
+        .pad-right {
             padding-right: 10px;
         }
     </style>
@@ -32,6 +34,7 @@
             <h1 class="display-4" align="center">User Record Finder</h1>
             <p class="lead">This utility will help identify all records owned by a user as well as provide a breakdown
                 of the entity type of those records.</p>
+            <button id="loadOrgData">Load Org Data</button>
         </div>
         <div class="row">
             <div class="col">
@@ -47,8 +50,21 @@
                             <option>Joan Baez</option>
                         </select>
                     </div>
+                </form>
             </div>
-            </form>
+        </div>
+        <div class="row">
+            <div class="col">
+                <form>
+                    <div class="form-group entities">
+                        <label for="select-entity"><i class="fas fa-user pad-right"></i>Select the entity for your
+                            report</label>
+                        <select class="form-control" id="select-entity">
+
+                        </select>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </body>
@@ -58,7 +74,35 @@
     var entityNameArray = [];
     var userNameArray = [];
 
-    function getEntityData() {
+    $(document).ready(function () {
+
+        // https://superamazintestbox.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'
+
+        // https://superamazintestbox.crm.dynamics.com/api/data/v9.0/systemusers?$select=systemuserid,fullname
+
+        $("#loadOrgData").click(function () {
+
+            $("#select-entity").empty();
+
+            let entityData;
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    entityData = JSON.parse(this.responseText);
+                    entityData = entityData.value;
+                    $(entityData).each(function (index, element) {
+                        entityNameArray.push(element.DisplayName.LocalizedLabels[0].Label);
+                        $("#select-entity").append(new Option(element.DisplayName.LocalizedLabels[0].Label, element.EntitySetName));
+                    });
+                }
+            };
+            xhr.open("GET", "https://superamazintestbox.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'");
+            xhr.send();
+        });
+
+    });
+
+    function getUserOwnedEntities() {
         let entityData;
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
@@ -67,12 +111,12 @@
                 getEntityNames(entityData);
             }
         };
-        xhr.open("GET", "https://superamazintestbox.crm.dynamics.com/api/data/v9.1/EntityDefinitions");
+        xhr.open("GET", "https://superamazintestbox.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'");
         xhr.send();
         // Next get all the entity names from the json array
     };
 
-    function getSystemUsers(){
+    function getSystemUsers() {
         let systemUsers;
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
@@ -93,12 +137,12 @@
         }
     };
 
-    function getUserNames(systemUsers){
+    function getUserNames(systemUsers) {
         let value = systemUsers["value"];
-        for (keys in value){
+        for (keys in value) {
             let userID = value[keys]['systemuserid'];
             let userName = value[keys]['fullname'];
-            let userObject = {"systemuserID": `${userID}`, "userName": `${userName}`};
+            let userObject = { "systemuserID": `${userID}`, "userName": `${userName}` };
             userNameArray.push(userObject);
         }
     };
