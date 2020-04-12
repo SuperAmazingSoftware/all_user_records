@@ -2,9 +2,12 @@
 
 <head>
     <meta charset="utf-8">
+    <title>Record Viewer</title>
+    <script src="../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="Styles/stylesheet.css">
+
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/materia/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1tymk6x9Y5K+OF0tlmG2fDRcn67QGzBkiM3IgtJ3VrtGrIi5ryhHjKjeeS60f1FA" crossorigin="anonymous">
 
@@ -77,6 +80,7 @@
 
     $(document).ready(function () {
 
+        getGlobalContext();
         // https://superamazintestbox.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'
 
         // https://superamazintestbox.crm.dynamics.com/api/data/v9.0/systemusers?$select=systemuserid,fullname
@@ -106,6 +110,12 @@
             xhr.send();
         });
     });
+
+    function getGlobalContext() {
+        var globalContext = parent.Xrm.Utility.getGlobalContext();
+        var clientURL = globalContext.getClientUrl();
+        console.log(clientURL);
+    }
 
     function getUserOwnedEntities() {
         let entityData;
