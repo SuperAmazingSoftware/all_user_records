@@ -81,9 +81,9 @@
     $(document).ready(function () {
 
         getGlobalContext();
-        // https://superamazintestbox.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'
+        // https://supertestinc.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'
 
-        // https://superamazintestbox.crm.dynamics.com/api/data/v9.0/systemusers?$select=systemuserid,fullname
+        // https://supertestinc.crm.dynamics.com/api/data/v9.0/systemusers?$select=systemuserid,fullname
 
         $("#loadOrgData").click(function () {
 
@@ -106,7 +106,7 @@
                     }
                 }
             };
-            xhr.open("GET", "https://superamazintestbox.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'");
+            xhr.open("GET", "https://supertestinc.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'");
             xhr.send();
         });
     });
@@ -126,7 +126,7 @@
                 getEntityNames(entityData);
             }
         };
-        xhr.open("GET", "https://superamazintestbox.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'");
+        xhr.open("GET", "https://supertestinc.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'");
         xhr.send();
         // Next get all the entity names from the json array
     };
@@ -140,7 +140,7 @@
                 getUserNames(systemUsers);
             }
         };
-        xhr.open("GET", "https://superamazintestbox.crm.dynamics.com/api/data/v9.1/systemusers");
+        xhr.open("GET", "https://supertestinc.crm.dynamics.com/api/data/v9.1/systemusers");
         xhr.send();
     }
     // collects 
