@@ -99,11 +99,13 @@
                     entityData = entityData.value;
                    
                     $(entityData).each(function (index, element) {
-                        entityNameArray.push(element.DisplayName.LocalizedLabels[0].Label);
+                        entityNameArray.push(element);
                     });
 
                     for (var i = 0; i <= entityNameArray.length; i++){
-                        $("#select-entity").append(new Option(entityNameArray[i]));
+                        if(typeof entityNameArray[i]!== "undefined" && typeof entityNameArray[i].EntitySetName !== "undefined") {
+                            $("#select-entity").append(new Option(entityNameArray[i].EntitySetName,entityNameArray[i].DisplayName.LocalizedLabels[0].Label));
+                        }
                         // make sure to create the JSON object, push it to the entityName Array, iterate the array, extract the values, and pass them to each new Option object)
                         // $("#select-entity").append(new Option(entityNameArray[i].DisplayName.LocalizedLabels[0].Label, entityNameArray[i].EntitySetName));
                     }
@@ -170,15 +172,55 @@
         for (keys in value) {
             let userID = value[keys]['systemuserid'];
             let userName = value[keys]['fullname'];
-            let userObject = { "systemuserID": `${userID}`, "userName": `${userName}` };
+            let userObject = { "systemuserId": `${userID}`, "userName": `${userName}` };
             userNameArray.push(userObject);
         }
     };
 
     function populateUserNames(userData){
         for(var o = 0; o<userData.value.length; o++){
-                $("#select-user").append(new Option(userNameArray[o].userName,userNameArray[o].systemuserID));
+                $("#select-user").append(new Option(userNameArray[o].userName,userNameArray[o].systemuserId));
         }
+    }
+
+    function fetchRecordsByUser(systemUser, entitySetName, callback) {
+        // Fetch XML query
+        // Create request
+        var userId = systemUser.systemuserId;
+        
+        var req = new XMLHttpRequest();
+        req.open("GET", "https://supertestinc.crm.dynamics.com/api/data/v9.1/" + entitySetName + "?$select=_createdby_value,createdon,_modifiedby_value,modifiedon,_owninguser_value&$filter=_owninguser_value eq " + userId, true);
+        req.setRequestHeader("OData-MaxVersion", "4.0");
+        req.setRequestHeader("OData-Version", "4.0");
+        req.setRequestHeader("Accept", "application/json");
+        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
+        req.onreadystatechange = function() {
+            if (this.readyState === 4) {
+                req.onreadystatechange = null;
+                if (this.status === 200) {
+                    var results = JSON.parse(this.response);
+                    for (var i = 0; i < results.value.length; i++) {
+                        var _createdby_value = results.value[i]["_createdby_value"];
+                        var _createdby_value_formatted = results.value[i]["_createdby_value@OData.Community.Display.V1.FormattedValue"];
+                        var _createdby_value_lookuplogicalname = results.value[i]["_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                        var createdon = results.value[i]["createdon"];
+                        var _modifiedby_value = results.value[i]["_modifiedby_value"];
+                        var _modifiedby_value_formatted = results.value[i]["_modifiedby_value@OData.Community.Display.V1.FormattedValue"];
+                        var _modifiedby_value_lookuplogicalname = results.value[i]["_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                        var modifiedon = results.value[i]["modifiedon"];
+                        var _owninguser_value = results.value[i]["_owninguser_value"];
+                        var _owninguser_value_formatted = results.value[i]["_owninguser_value@OData.Community.Display.V1.FormattedValue"];
+                        var _owninguser_value_lookuplogicalname = results.value[i]["_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                    }
+                } else {
+                    console.log(this.statusText);
+                }
+            }
+
+            callback(results);
+        };
+        req.send();
     }
 
 
