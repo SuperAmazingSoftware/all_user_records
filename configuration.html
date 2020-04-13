@@ -93,7 +93,7 @@
 
             // https://supertestinc.crm.dynamics.com/api/data/v9.0/systemusers?$select=systemuserid,fullname
 
-            $("#submit").click( () => fetchRecordsByUser(getSelectedUser(),getSetlectedEntity(), setQueryResults));
+            $("#submit").click( () => fetchRecordsByUser(getSelectedUser(),getSelectedEntity(), setQueryResults));
 
             $("#loadOrgData").click(function () {
 
@@ -139,7 +139,7 @@
             return {"systemUserId" : $("#select-user").val()}
         }
 
-        function getSetlectedEntity(){
+        function getSelectedEntity(){
             let entity = entityList.find(entity => entity.MetadataId == $("#select-entity").val());
             return entity.EntitySetName;
         }
