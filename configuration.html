@@ -64,18 +64,36 @@
                     </div>
                 </form>
             </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <form>
-                    <div class="form-group entities">
-                        <label for="select-entity"><i class="fas fa-user pad-right"></i>Select the entity for your
-                            report</label>
-                        <select class="form-control" id="select-entity">
+            <div class="row">
+                <div class="col">
+                    <form>
+                        <div class="form-group users">
+                            <label for="select-user"><i class="fas fa-user pad-right"></i>Select the user for your
+                                report</label>
+                            <select class="form-control" id="select-user">
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <form>
+                        <div class="form-group entities">
+                            <label for="select-entity"><i class="fas fa-user pad-right"></i>Select the entity for your
+                                report</label>
+                            <select class="form-control" id="select-entity">
 
-                        </select>
-                    </div>
-                </form>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <button class="btn" id="submit">Submit</button>
+            </div>
+            <div class="row">
+                <div id="results-view"></div>
             </div>
         </div>
         <div class="row">
@@ -89,6 +107,37 @@
 <script src="https://kit.fontawesome.com/e1c53c4bb6.js" crossorigin="anonymous"></script>
 <script>
     // JS to handle all Record Finder Page Events
+
+    function setQueryResults(data) {
+        var target = "#results-view";
+        var innerHtml = "";
+        innerHtml += '<table class="table table-bordered">';
+        innerHtml += '<thead>';
+        innerHtml += '<tr scope="row">';
+
+        for (index = 0; index < columnSetArray.length; index++) {
+            innerHtml += '<th scope="col">' + columnSetArray[index] + "</th>"
+        }
+
+        innerHtml += '/<tr>';
+        innerHtml += '</thead>';
+
+        innerHtml += '<tbody class="table-striped table-hover">';
+
+        for (i = 0; i < data.length; i++) {
+            innerHtml += '<tr scope="row">'
+            for (o = 0; o < columnSetArray.length; o++) {
+                value = data[i][columnSetArray[o]]
+                innerHtml += ('<td>' + value + '</td>');
+            }
+            innerHtml += '</tr>'
+        }
+        innerHtml += '</tbody>';
+        innerHtml += '</table>';
+
+        $(target).html(innerHtml);
+    }
+
 
 </script>
 
