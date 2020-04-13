@@ -1,49 +1,68 @@
-    <html lang="en">
+<html lang="en">
 
-    <head>
-        <meta charset="utf-8">
-        <title>Record Viewer</title>
-        <script src="../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+<head>
+    <meta charset="utf-8">
+    <title>Record Viewer</title>
 
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
-        <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/materia/bootstrap.min.css" rel="stylesheet"
-            integrity="sha384-1tymk6x9Y5K+OF0tlmG2fDRcn67QGzBkiM3IgtJ3VrtGrIi5ryhHjKjeeS60f1FA" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/materia/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1tymk6x9Y5K+OF0tlmG2fDRcn67QGzBkiM3IgtJ3VrtGrIi5ryhHjKjeeS60f1FA" crossorigin="anonymous">
 
-        <!-- jQuery library -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-        <!-- Latest compiled JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-        <style>
-            .users select {
-                font-size: 3em;
-            }
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-            .users label {
-                font-size: 3em;
-            }
+    <!-- Reference to ClientGlobalContext root JavaScript Web Resource-->
+    <script src="../ClientGlobalContext.js.aspx" type="text/javascript"></script>
 
-            .pad-right {
-                padding-right: 10px;
-            }
-            option{
-                font-size: 1.5em;
-            }
-            .form-control{
-                font-size: 1.5em;
-            }
-        </style>
-    </head>
+    <!-- Record Finder JavaScript Files-->
+    <script src="Scripts/recordFinder.js" type="text/javascript"></script>
 
-    <body>
-        <div class="container">
-            <div class="jumbotron">
-                <h1 class="display-4" align="center">User Record Finder</h1>
-                <p class="lead">This utility will help identify all records owned by a user as well as provide a breakdown
-                    of the entity type of those records.</p>
-                <button id="loadOrgData">Load Org Data</button>
+    <style>
+        .users select {
+            font-size: 3em;
+        }
+
+        .users label {
+            font-size: 3em;
+        }
+
+        .pad-right {
+            padding-right: 10px;
+        }
+
+        option {
+            font-size: 1.5em;
+        }
+
+        .form-control {
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4" align="center">User Record Finder</h1>
+            <p class="lead">This utility will help identify all records owned by a user as well as provide a breakdown
+                of the entity type of those records.</p>
+            <button id="loadOrgData">Load Org Data</button>
+        </div>
+        <div class="row">
+            <div class="col">
+                <form>
+                    <div class="form-group users">
+                        <label for="select-user"><i class="fas fa-user pad-right"></i>Select the user for your
+                            report</label>
+                        <select class="form-control" id="select-user">
+                        </select>
+                    </div>
+                </form>
             </div>
             <div class="row">
                 <div class="col">
@@ -77,208 +96,49 @@
                 <div id="results-view"></div>
             </div>
         </div>
-    </body>
-    <script src="https://kit.fontawesome.com/e1c53c4bb6.js" crossorigin="anonymous"></script>
+        <div class="row">
+            <button class="btn" id="submit">Submit</button>
+        </div>
+        <div class="row">
+            <div id="results-view"></div>
+        </div>
+    </div>
+</body>
+<script src="https://kit.fontawesome.com/e1c53c4bb6.js" crossorigin="anonymous"></script>
+<script>
+    // JS to handle all Record Finder Page Events
 
-    <script>
-        var entityList = [];
-        var userList = [];
-        var columnSetArray = ["_createdby_value","createdon","_modifiedby_value","modifiedon","_owninguser_value"];
+    function setQueryResults(data) {
+        var target = "#results-view";
+        var innerHtml = "";
+        innerHtml += '<table class="table table-bordered">';
+        innerHtml += '<thead>';
+        innerHtml += '<tr scope="row">';
 
-
-        $(document).ready(function () {
-
-            getGlobalContext();
-            // https://supertestinc.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'
-
-            // https://supertestinc.crm.dynamics.com/api/data/v9.0/systemusers?$select=systemuserid,fullname
-
-            $("#submit").click( () => fetchRecordsByUser(getSelectedUser(),getSelectedEntity(), setQueryResults));
-
-            $("#loadOrgData").click(function () {
-
-                $("#select-entity").empty();
-
-                let entityData;
-                let userData;
-
-                let xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        entityData = JSON.parse(this.responseText);
-                        entityData = entityData.value;
-                    
-                        $(entityData).each(function (index, element) {
-                            entityList.push(element);
-                        });
-
-                        for (var i = 0; i <= entityList.length; i++){
-                            if(typeof entityList[i]!== "undefined" && typeof entityList[i].EntitySetName !== "undefined") {
-                                $("#select-entity").append(new Option(entityList[i].DisplayName.LocalizedLabels[0].Label,entityList[i].MetadataId));
-                            }
-                            // make sure to create the JSON object, push it to the entityName Array, iterate the array, extract the values, and pass them to each new Option object)
-                            // $("#select-entity").append(new Option(entityList[i].DisplayName.LocalizedLabels[0].Label, entityList[i].EntitySetName));
-                        }
-
-                        entityList.sort();   
-
-                    
-        
-                    }
-                };
-                xhr.open("GET", "https://supertestinc.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=MetadataId,DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'");
-                xhr.send();
-
-                getSystemUsers(populateUserNames);
-
-            
-            });
-        });
-
-        function getSelectedUser(){
-            return {"systemUserId" : $("#select-user").val()}
+        for (index = 0; index < columnSetArray.length; index++) {
+            innerHtml += '<th scope="col">' + columnSetArray[index] + "</th>"
         }
 
-        function getSelectedEntity(){
-            let entity = entityList.find(entity => entity.MetadataId == $("#select-entity").val());
-            return entity.EntitySetName;
-        }
+        innerHtml += '/<tr>';
+        innerHtml += '</thead>';
 
-        function getGlobalContext() {
-            var globalContext = parent.Xrm.Utility.getGlobalContext();
-            var clientURL = globalContext.getClientUrl();
-            console.log(clientURL);
-        }
+        innerHtml += '<tbody class="table-striped table-hover">';
 
-        function getUserOwnedEntities() {
-            let entityData;
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    entityData = JSON.parse(this.responseText);
-                    getEntityNames(entityData);
-                }
-            };
-            xhr.open("GET", "https://supertestinc.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'");
-            xhr.send();
-            // Next get all the entity names from the json array
-        };
-
-        function getSystemUsers(callback) {
-            let systemUsers;
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    systemUsers = JSON.parse(this.responseText);
-                    fetchUsers(systemUsers);
-                    callback(systemUsers);
-                }
-            };
-            xhr.open("GET", "https://supertestinc.crm.dynamics.com/api/data/v9.1/systemusers");
-            xhr.send();
-        }
-        // collects 
-        function getEntityNames(entityData) {
-            let value = entityData["value"];
-            for (keys in value) {
-                let logicalName = value[keys]['LogicalName'];
-                entityList.push(logicalName);
+        for (i = 0; i < data.length; i++) {
+            innerHtml += '<tr scope="row">'
+            for (o = 0; o < columnSetArray.length; o++) {
+                value = data[i][columnSetArray[o]]
+                innerHtml += ('<td>' + value + '</td>');
             }
-        };
-
-        function fetchUsers(systemUsers) {
-            let value = systemUsers["value"];
-            for (keys in value) {
-                let userID = value[keys]['systemuserid'];
-                let userName = value[keys]['fullname'];
-                let userObject = { "systemUserId": `${userID}`, "userName": `${userName}` };
-                userList.push(userObject);
-            }
-            userList.sort();   
-
-        };
-
-        function populateUserNames(userData){
-            for(var o = 0; o<userData.value.length; o++){
-                    $("#select-user").append(new Option(userList[o].userName,userList[o].systemUserId));
-            }
+            innerHtml += '</tr>'
         }
+        innerHtml += '</tbody>';
+        innerHtml += '</table>';
 
-        function fetchRecordsByUser(systemUser, entitySetName, callback) {
-            // Fetch XML query
-            // Create request
-            var userId = systemUser.systemUserId;
-            var columnSetString =  "";
-            columnSetArray.forEach(column => columnSetString += column + ",");
-            columnSetString = columnSetString.substr(0,columnSetString.length -1);
-            
-            
-            var req = new XMLHttpRequest();
-            req.open("GET", "https://supertestinc.crm.dynamics.com/api/data/v9.1/" + entitySetName + "?$select=" + columnSetString + "&$filter=_owninguser_value eq " + userId, true);
-            req.setRequestHeader("OData-MaxVersion", "4.0");
-            req.setRequestHeader("OData-Version", "4.0");
-            req.setRequestHeader("Accept", "application/json");
-            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
-            req.onreadystatechange = function() {
-                if (this.readyState === 4) {
-                    req.onreadystatechange = null;
-                    if (this.status === 200) {
-                        var results = JSON.parse(this.response);
-                        for (var i = 0; i < results.value.length; i++) {
-                            var _createdby_value = results.value[i]["_createdby_value"];
-                            var _createdby_value_formatted = results.value[i]["_createdby_value@OData.Community.Display.V1.FormattedValue"];
-                            var _createdby_value_lookuplogicalname = results.value[i]["_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
-                            var createdon = results.value[i]["createdon"];
-                            var _modifiedby_value = results.value[i]["_modifiedby_value"];
-                            var _modifiedby_value_formatted = results.value[i]["_modifiedby_value@OData.Community.Display.V1.FormattedValue"];
-                            var _modifiedby_value_lookuplogicalname = results.value[i]["_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
-                            var modifiedon = results.value[i]["modifiedon"];
-                            var _owninguser_value = results.value[i]["_owninguser_value"];
-                            var _owninguser_value_formatted = results.value[i]["_owninguser_value@OData.Community.Display.V1.FormattedValue"];
-                            var _owninguser_value_lookuplogicalname = results.value[i]["_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
-                        }
-                        callback(results.value);
-                    } else {
-                        console.log(this.statusText);
-                    }
-                }
-
-            };
-            req.send();
-        }
-
-        function setQueryResults(data){
-            var target = "#results-view";
-            var innerHtml = "";
-            innerHtml += '<table class="table table-bordered">' ;
-            innerHtml += '<thead>';
-            innerHtml += '<tr scope="row">' ;
-
-            for(index = 0; index < columnSetArray.length;index++){
-                innerHtml += '<th scope="col">'+ columnSetArray[index] + "</th>"
-            }
-            
-            innerHtml += '/<tr>' ;
-            innerHtml += '</thead>';
-            
-            innerHtml += '<tbody class="table-striped table-hover">';
-
-            for(i = 0; i<data.length;i++){
-                innerHtml +='<tr scope="row">'
-                for(o = 0; o<columnSetArray.length;o++){
-                    value = data[i][columnSetArray[o]]
-                    innerHtml += ('<td>' + value + '</td>');
-                }
-                innerHtml +='</tr>' 
-            }
-            innerHtml += '</tbody>';
-            innerHtml +=  '</table>' ;
-
-            $(target).html(innerHtml);
-        }
+        $(target).html(innerHtml);
+    }
 
 
-    </script>
+</script>
 
-    </html>
+</html>
