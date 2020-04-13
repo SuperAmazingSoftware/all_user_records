@@ -1,157 +1,284 @@
-<html lang="en">
+    <html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="Styles/stylesheet.css">
-    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/materia/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-1tymk6x9Y5K+OF0tlmG2fDRcn67QGzBkiM3IgtJ3VrtGrIi5ryhHjKjeeS60f1FA" crossorigin="anonymous">
+    <head>
+        <meta charset="utf-8">
+        <title>Record Viewer</title>
+        <script src="../ClientGlobalContext.js.aspx" type="text/javascript"></script>
 
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
-    <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <style>
-        .users select {
-            font-size: 3em;
-        }
+        <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/materia/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-1tymk6x9Y5K+OF0tlmG2fDRcn67QGzBkiM3IgtJ3VrtGrIi5ryhHjKjeeS60f1FA" crossorigin="anonymous">
 
-        .users label {
-            font-size: 3em;
-        }
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-        .pad-right {
-            padding-right: 10px;
-        }
-        option{
-            font-size: 1.5em;
-        }
-        .form-control{
-            font-size: 1.5em;
-        }
-    </style>
-</head>
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <style>
+            .users select {
+                font-size: 3em;
+            }
 
-<body onload="getEntityData()">
-    <div class="container">
-        <div class="jumbotron">
-            <h1 class="display-4" align="center">User Record Finder</h1>
-            <p class="lead">This utility will help identify all records owned by a user as well as provide a breakdown
-                of the entity type of those records.</p>
-            <button id="loadOrgData">Load Org Data</button>
-        </div>
-        <div class="row">
-            <div class="col">
-                <form>
-                    <div class="form-group users">
-                        <label for="select-user"><i class="fas fa-user pad-right"></i>Select the user for your
-                            report</label>
-                        <select class="form-control" id="select-user">
-                        </select>
-                    </div>
-                </form>
+            .users label {
+                font-size: 3em;
+            }
+
+            .pad-right {
+                padding-right: 10px;
+            }
+            option{
+                font-size: 1.5em;
+            }
+            .form-control{
+                font-size: 1.5em;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="display-4" align="center">User Record Finder</h1>
+                <p class="lead">This utility will help identify all records owned by a user as well as provide a breakdown
+                    of the entity type of those records.</p>
+                <button id="loadOrgData">Load Org Data</button>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <form>
+                        <div class="form-group users">
+                            <label for="select-user"><i class="fas fa-user pad-right"></i>Select the user for your
+                                report</label>
+                            <select class="form-control" id="select-user">
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <form>
+                        <div class="form-group entities">
+                            <label for="select-entity"><i class="fas fa-user pad-right"></i>Select the entity for your
+                                report</label>
+                            <select class="form-control" id="select-entity">
+
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <button class="btn" id="submit">Submit</button>
+            </div>
+            <div class="row">
+                <div id="results-view"></div>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <form>
-                    <div class="form-group entities">
-                        <label for="select-entity"><i class="fas fa-user pad-right"></i>Select the entity for your
-                            report</label>
-                        <select class="form-control" id="select-entity">
+    </body>
+    <script src="https://kit.fontawesome.com/e1c53c4bb6.js" crossorigin="anonymous"></script>
 
-                        </select>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</body>
-<script src="https://kit.fontawesome.com/e1c53c4bb6.js" crossorigin="anonymous"></script>
+    <script>
+        var entityList = [];
+        var userList = [];
+        var columnSetArray = ["_createdby_value","createdon","_modifiedby_value","modifiedon","_owninguser_value"];
 
-<script>
-    var entityNameArray = [];
-    var userNameArray = [];
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        // https://superamazintestbox.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'
+            getGlobalContext();
+            // https://supertestinc.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'
 
-        // https://superamazintestbox.crm.dynamics.com/api/data/v9.0/systemusers?$select=systemuserid,fullname
+            // https://supertestinc.crm.dynamics.com/api/data/v9.0/systemusers?$select=systemuserid,fullname
 
-        $("#loadOrgData").click(function () {
+            $("#submit").click( () => fetchRecordsByUser(getSelectedUser(),getSelectedEntity(), setQueryResults));
 
-            $("#select-entity").empty();
+            $("#loadOrgData").click(function () {
 
+                $("#select-entity").empty();
+
+                let entityData;
+                let userData;
+
+                let xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        entityData = JSON.parse(this.responseText);
+                        entityData = entityData.value;
+                    
+                        $(entityData).each(function (index, element) {
+                            entityList.push(element);
+                        });
+
+                        for (var i = 0; i <= entityList.length; i++){
+                            if(typeof entityList[i]!== "undefined" && typeof entityList[i].EntitySetName !== "undefined") {
+                                $("#select-entity").append(new Option(entityList[i].DisplayName.LocalizedLabels[0].Label,entityList[i].MetadataId));
+                            }
+                            // make sure to create the JSON object, push it to the entityName Array, iterate the array, extract the values, and pass them to each new Option object)
+                            // $("#select-entity").append(new Option(entityList[i].DisplayName.LocalizedLabels[0].Label, entityList[i].EntitySetName));
+                        }
+
+                        entityList.sort();   
+
+                    
+        
+                    }
+                };
+                xhr.open("GET", "https://supertestinc.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=MetadataId,DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'");
+                xhr.send();
+
+                getSystemUsers(populateUserNames);
+
+            
+            });
+        });
+
+        function getSelectedUser(){
+            return {"systemUserId" : $("#select-user").val()}
+        }
+
+        function getSelectedEntity(){
+            let entity = entityList.find(entity => entity.MetadataId == $("#select-entity").val());
+            return entity.EntitySetName;
+        }
+
+        function getGlobalContext() {
+            var globalContext = parent.Xrm.Utility.getGlobalContext();
+            var clientURL = globalContext.getClientUrl();
+            console.log(clientURL);
+        }
+
+        function getUserOwnedEntities() {
             let entityData;
             let xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     entityData = JSON.parse(this.responseText);
-                    entityData = entityData.value;
-                    $(entityData).each(function (index, element) {
-                        entityNameArray.push(element.DisplayName.LocalizedLabels[0].Label);
-                    });
-                    entityNameArray.sort();
-                    for (var i = 0; i <= entityNameArray.length; i++){
-                        $("#select-entity").append(new Option(entityNameArray[i]));
-                        // make sure to create the JSON object, push it to the entityName Array, iterate the array, extract the values, and pass them to each new Option object)
-                        // $("#select-entity").append(new Option(entityNameArray[i].DisplayName.LocalizedLabels[0].Label, entityNameArray[i].EntitySetName));
-                    }
+                    getEntityNames(entityData);
                 }
             };
-            xhr.open("GET", "https://superamazintestbox.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'");
+            xhr.open("GET", "https://supertestinc.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'");
             xhr.send();
-        });
-    });
+            // Next get all the entity names from the json array
+        };
 
-    function getUserOwnedEntities() {
-        let entityData;
-        let xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                entityData = JSON.parse(this.responseText);
-                getEntityNames(entityData);
+        function getSystemUsers(callback) {
+            let systemUsers;
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    systemUsers = JSON.parse(this.responseText);
+                    fetchUsers(systemUsers);
+                    callback(systemUsers);
+                }
+            };
+            xhr.open("GET", "https://supertestinc.crm.dynamics.com/api/data/v9.1/systemusers");
+            xhr.send();
+        }
+        // collects 
+        function getEntityNames(entityData) {
+            let value = entityData["value"];
+            for (keys in value) {
+                let logicalName = value[keys]['LogicalName'];
+                entityList.push(logicalName);
             }
         };
-        xhr.open("GET", "https://superamazintestbox.crm.dynamics.com/api/data/v9.0/EntityDefinitions?$select=DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'");
-        xhr.send();
-        // Next get all the entity names from the json array
-    };
 
-    function getSystemUsers() {
-        let systemUsers;
-        let xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                systemUsers = JSON.parse(this.responseText);
-                getUserNames(systemUsers);
+        function fetchUsers(systemUsers) {
+            let value = systemUsers["value"];
+            for (keys in value) {
+                let userID = value[keys]['systemuserid'];
+                let userName = value[keys]['fullname'];
+                let userObject = { "systemUserId": `${userID}`, "userName": `${userName}` };
+                userList.push(userObject);
             }
+            userList.sort();   
+
         };
-        xhr.open("GET", "https://superamazintestbox.crm.dynamics.com/api/data/v9.1/systemusers");
-        xhr.send();
-    }
-    // collects 
-    function getEntityNames(entityData) {
-        let value = entityData["value"];
-        for (keys in value) {
-            let logicalName = value[keys]['LogicalName'];
-            entityNameArray.push(logicalName);
+
+        function populateUserNames(userData){
+            for(var o = 0; o<userData.value.length; o++){
+                    $("#select-user").append(new Option(userList[o].userName,userList[o].systemUserId));
+            }
         }
-    };
 
-    function getUserNames(systemUsers) {
-        let value = systemUsers["value"];
-        for (keys in value) {
-            let userID = value[keys]['systemuserid'];
-            let userName = value[keys]['fullname'];
-            let userObject = { "systemuserID": `${userID}`, "userName": `${userName}` };
-            userNameArray.push(userObject);
+        function fetchRecordsByUser(systemUser, entitySetName, callback) {
+            // Fetch XML query
+            // Create request
+            var userId = systemUser.systemUserId;
+            var columnSetString =  "";
+            columnSetArray.forEach(column => columnSetString += column + ",");
+            columnSetString = columnSetString.substr(0,columnSetString.length -1);
+            
+            
+            var req = new XMLHttpRequest();
+            req.open("GET", "https://supertestinc.crm.dynamics.com/api/data/v9.1/" + entitySetName + "?$select=" + columnSetString + "&$filter=_owninguser_value eq " + userId, true);
+            req.setRequestHeader("OData-MaxVersion", "4.0");
+            req.setRequestHeader("OData-Version", "4.0");
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
+            req.onreadystatechange = function() {
+                if (this.readyState === 4) {
+                    req.onreadystatechange = null;
+                    if (this.status === 200) {
+                        var results = JSON.parse(this.response);
+                        for (var i = 0; i < results.value.length; i++) {
+                            var _createdby_value = results.value[i]["_createdby_value"];
+                            var _createdby_value_formatted = results.value[i]["_createdby_value@OData.Community.Display.V1.FormattedValue"];
+                            var _createdby_value_lookuplogicalname = results.value[i]["_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                            var createdon = results.value[i]["createdon"];
+                            var _modifiedby_value = results.value[i]["_modifiedby_value"];
+                            var _modifiedby_value_formatted = results.value[i]["_modifiedby_value@OData.Community.Display.V1.FormattedValue"];
+                            var _modifiedby_value_lookuplogicalname = results.value[i]["_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                            var modifiedon = results.value[i]["modifiedon"];
+                            var _owninguser_value = results.value[i]["_owninguser_value"];
+                            var _owninguser_value_formatted = results.value[i]["_owninguser_value@OData.Community.Display.V1.FormattedValue"];
+                            var _owninguser_value_lookuplogicalname = results.value[i]["_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                        }
+                        callback(results.value);
+                    } else {
+                        console.log(this.statusText);
+                    }
+                }
+
+            };
+            req.send();
         }
-    };
 
-</script>
+        function setQueryResults(data){
+            var target = "#results-view";
+            var innerHtml = "";
+            innerHtml += '<table class="table table-bordered">' ;
+            innerHtml += '<thead>';
+            innerHtml += '<tr scope="row">' ;
 
-</html>
+            for(index = 0; index < columnSetArray.length;index++){
+                innerHtml += '<th scope="col">'+ columnSetArray[index] + "</th>"
+            }
+            
+            innerHtml += '/<tr>' ;
+            innerHtml += '</thead>';
+            
+            innerHtml += '<tbody class="table-striped table-hover">';
+
+            for(i = 0; i<data.length;i++){
+                innerHtml +='<tr scope="row">'
+                for(o = 0; o<columnSetArray.length;o++){
+                    value = data[i][columnSetArray[o]]
+                    innerHtml += ('<td>' + value + '</td>');
+                }
+                innerHtml +='</tr>' 
+            }
+            innerHtml += '</tbody>';
+            innerHtml +=  '</table>' ;
+
+            $(target).html(innerHtml);
+        }
+
+
+    </script>
+
+    </html>
