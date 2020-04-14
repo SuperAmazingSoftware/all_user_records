@@ -23,11 +23,11 @@
     <script src="Scripts/recordFinder.js" type="text/javascript"></script>
 
     <style>
-        .users select {
+        .users select, .entities select {
             font-size: 3em;
         }
 
-        .users label {
+        .users label, .entities label {
             font-size: 3em;
         }
 
@@ -47,11 +47,13 @@
 
 <body>
     <div class="container">
-        <div class="jumbotron">
-            <h1 class="display-4" align="center">User Record Finder</h1>
-            <p class="lead">This utility will help identify all records owned by a user as well as provide a breakdown
-                of the entity type of those records.</p>
-            <button id="loadOrgData">Load Org Data</button>
+        <div class="row">
+            <div class="jumbotron">
+                <h1 class="display-4" align="center">User Record Finder</h1>
+                <p class="lead">This utility will help identify all records owned by a user as well as provide a breakdown
+                    of the entity type of those records.</p>
+                <button id="loadOrgData">Load Org Data</button>
+            </div>
         </div>
         <div class="row">
             <div class="col">
@@ -64,40 +66,20 @@
                     </div>
                 </form>
             </div>
-            <div class="row">
-                <div class="col">
-                    <form>
-                        <div class="form-group users">
-                            <label for="select-user"><i class="fas fa-user pad-right"></i>Select the user for your
-                                report</label>
-                            <select class="form-control" id="select-user">
-                            </select>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <form>
-                        <div class="form-group entities">
-                            <label for="select-entity"><i class="fas fa-user pad-right"></i>Select the entity for your
-                                report</label>
-                            <select class="form-control" id="select-entity">
+            <div class="col">
+                <form>
+                    <div class="form-group entities">
+                        <label for="select-entity"><i class="fas fa-sitemap pad-right"></i>Select the entity for your
+                            report</label>
+                        <select class="form-control" id="select-entity">
 
-                            </select>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="row">
-                <button class="btn" id="submit">Submit</button>
-            </div>
-            <div class="row">
-                <div id="results-view"></div>
+                        </select>
+                    </div>
+                </form>
             </div>
         </div>
         <div class="row">
-            <button class="btn" id="submit">Submit</button>
+            <button class="btn btn-block" id="submit">Submit</button>
         </div>
         <div class="row">
             <div id="results-view"></div>
