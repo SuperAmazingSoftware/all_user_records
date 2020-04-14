@@ -23,11 +23,11 @@
     <script src="../WebResources/workflow_recordFinder.js" type="text/javascript"></script>
 
     <style>
-        .users select {
+        .users select, .entities select {
             font-size: 3em;
         }
 
-        .users label {
+        .users label, .entities label {
             font-size: 3em;
         }
 
@@ -69,7 +69,7 @@
             <div class="col">
                 <form>
                     <div class="form-group entities">
-                        <label for="select-entity"><i class="fas fa-user pad-right"></i>Select the entity for your
+                        <label for="select-entity"><i class="fas fa-sitemap pad-right"></i>Select the entity for your
                             report</label>
                         <select class="form-control" id="select-entity">
 
@@ -79,7 +79,7 @@
             </div>
         </div>
         <div class="row">
-            <button class="btn" id="submit">Submit</button>
+            <button class="btn btn-block" id="submit">Submit</button>
         </div>
         <div class="row">
             <div id="results-view"></div>
