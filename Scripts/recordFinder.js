@@ -26,12 +26,12 @@ window.orgInfo = {
   },
 };
 
-$(document).ready(function () {
+jq(document).ready(function () {
   globalContextObj = getGlobalContext();
   window.orgInfo._initializeServiceRootUrl(globalContextObj);
 
   if (globalContextObj !== null)
-    $("#submit").click(() =>
+    jq("#submit").click(() =>
       fetchRecordsByUser(
         getSelectedUser(),
         getSetlectedEntity(),
@@ -39,8 +39,8 @@ $(document).ready(function () {
       )
     );
 
-  $("#loadOrgData").click(function () {
-    $("#select-entity").empty();
+  jq("#loadOrgData").click(function () {
+    jq("#select-entity").empty();
 
     let entityData;
     let userData;
@@ -51,7 +51,7 @@ $(document).ready(function () {
         entityData = JSON.parse(this.responseText);
         entityData = entityData.value;
 
-        $(entityData).each(function (index, element) {
+        jq(entityData).each(function (index, element) {
           entityList.push(element);
         });
 
@@ -60,7 +60,7 @@ $(document).ready(function () {
             typeof entityList[i] !== "undefined" &&
             typeof entityList[i].EntitySetName !== "undefined"
           ) {
-            $("#select-entity").append(
+            jq("#select-entity").append(
               new Option(
                 entityList[i].DisplayName.LocalizedLabels[0].Label,
                 entityList[i].MetadataId
@@ -68,7 +68,7 @@ $(document).ready(function () {
             );
           }
           // make sure to create the JSON object, push it to the entityName Array, iterate the array, extract the values, and pass them to each new Option object)
-          // $("#select-entity").append(new Option(entityList[i].DisplayName.LocalizedLabels[0].Label, entityList[i].EntitySetName));
+          // jq("#select-entity").append(new Option(entityList[i].DisplayName.LocalizedLabels[0].Label, entityList[i].EntitySetName));
         }
 
         entityList.sort();
@@ -86,12 +86,12 @@ $(document).ready(function () {
 });
 
 function getSelectedUser() {
-  return { systemUserId: $("#select-user").val() };
+  return { systemUserId: jq("#select-user").val() };
 }
 
 function getSetlectedEntity() {
   let entity = entityList.find(
-    (entity) => entity.MetadataId == $("#select-entity").val()
+    (entity) => entity.MetadataId == jq("#select-entity").val()
   );
   return entity.EntitySetName;
 }
@@ -154,7 +154,7 @@ function fetchUsers(systemUsers) {
 
 function populateUserNames(userData) {
   for (var o = 0; o < userData.value.length; o++) {
-    $("#select-user").append(
+    jq("#select-user").append(
       new Option(userList[o].userName, userList[o].systemUserId)
     );
   }
@@ -257,5 +257,5 @@ function setQueryResults(data) {
   innerHtml += "</tbody>";
   innerHtml += "</table>";
 
-  $(target).html(innerHtml);
+  jq(target).html(innerHtml);
 }
