@@ -2,13 +2,8 @@
 var jq = jQuery.noConflict();
 var entityList = [];
 var userList = [];
-var columnSetArray = [
-  "_createdby_value",
-  "createdon",
-  "_modifiedby_value",
-  "modifiedon",
-  "_owninguser_value",
-];
+var attributeList = [];
+
 var globalContextObj = {};
 window.orgInfo = {
   serviceRootUrl: "",
@@ -35,9 +30,14 @@ $(document).ready(function () {
       fetchRecordsByUser(
         getSelectedUser(),
         getSetlectedEntity(),
-        setQueryResults
+        generateResultTable
       )
     );
+
+    $("#select-entity").change((event) => {
+      console.log($(event.target).children("option:selected").val());
+      fetchAttributeList(entityList[0].MetadataId, generateAttributeList);
+    })
 
   $("#loadOrgData").click(function () {
     $("#select-entity").empty();
@@ -56,34 +56,34 @@ $(document).ready(function () {
         });
 
         for (var i = 0; i <= entityList.length; i++) {
-          if (
-            typeof entityList[i] !== "undefined" &&
-            typeof entityList[i].EntitySetName !== "undefined"
-          ) {
-            $("#select-entity").append(
-              new Option(
-                entityList[i].DisplayName.LocalizedLabels[0].Label,
-                entityList[i].MetadataId
-              )
-            );
+          if (typeof entityList[i] !== "undefined" && typeof entityList[i].EntitySetName !== "undefined") {
+            $("#select-entity").append(new Option(entityList[i].DisplayName.LocalizedLabels[0].Label,entityList[i].MetadataId));
           }
           // make sure to create the JSON object, push it to the entityName Array, iterate the array, extract the values, and pass them to each new Option object)
           // $("#select-entity").append(new Option(entityList[i].DisplayName.LocalizedLabels[0].Label, entityList[i].EntitySetName));
-        }
-
+        }        
         entityList.sort();
+
       }
     };
     xhr.open(
       "GET",
       window.orgInfo._getServiceRootUrl() +
-        "/EntityDefinitions?$select=MetadataId,DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'"
+        "/EntityDefinitions?$select=MetadataId,Attributes,DisplayName,EntitySetName&$filter=OwnershipType eq Microsoft.Dynamics.CRM.OwnershipTypes'UserOwned'"
     );
     xhr.send();
 
     getSystemUsers(populateUserNames);
   });
 });
+
+function getSelectedAttributes(){
+  return ["_createdby_value",
+  "createdon",
+  "_modifiedby_value",
+  "modifiedon",
+  "_owninguser_value"]
+}
 
 function getSelectedUser() {
   return { systemUserId: $("#select-user").val() };
@@ -125,7 +125,7 @@ function getSystemUsers(callback) {
   xhr.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       systemUsers = JSON.parse(this.responseText);
-      fetchUsers(systemUsers);
+      ingestUsers(systemUsers);
       callback(systemUsers);
     }
   };
@@ -141,7 +141,7 @@ function getEntityNames(entityData) {
   }
 }
 
-function fetchUsers(systemUsers) {
+function ingestUsers(systemUsers) {
   let value = systemUsers["value"];
   for (keys in value) {
     let userID = value[keys]["systemuserid"];
@@ -165,7 +165,7 @@ function fetchRecordsByUser(systemUser, entitySetName, callback) {
   // Create request
   var userId = systemUser.systemUserId;
   var columnSetString = "";
-  columnSetArray.forEach((column) => (columnSetString += column + ","));
+  getSelectedAttributes().forEach((column) => (columnSetString += column + ","));
   columnSetString = columnSetString.substr(0, columnSetString.length - 1);
 
   var req = new XMLHttpRequest();
@@ -230,16 +230,18 @@ function fetchRecordsByUser(systemUser, entitySetName, callback) {
   req.send();
 }
 
-function setQueryResults(data) {
+function generateResultTable(data) {
   var target = "#results-view";
   var innerHtml = "";
   innerHtml += '<table class="table table-bordered">';
   innerHtml += "<thead>";
   innerHtml += '<tr scope="row">';
 
-  for (index = 0; index < columnSetArray.length; index++) {
-    innerHtml += '<th scope="col">' + columnSetArray[index] + "</th>";
-  }
+  $(getSelectedAttributes()).each(function (index, element) {
+    innerHtml += '<th scope="col">' + element + "</th>";
+  });
+
+  
 
   innerHtml += "/<tr>";
   innerHtml += "</thead>";
@@ -259,3 +261,27 @@ function setQueryResults(data) {
 
   $(target).html(innerHtml);
 }
+
+function fetchAttributeList(metadataId,callback){
+  let xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        attributeList = JSON.parse(this.responseText);
+        attributeList = attributeList.Attributes;
+        callback(attributeList);
+      }
+  } 
+  xhr.open("GET",window.orgInfo._getServiceRootUrl() + `/EntityDefinitions(${metadataId})?$select=MetadataId&$expand=Attributes($select=LogicalName,DisplayName)` ); 
+  xhr.send();
+}
+
+function generateAttributeList(attributes){
+  $("#select-attributes").empty();
+  $(attributes).each(function (index, attribute) {
+    if(attribute.DisplayName.LocalizedLabels && attribute.DisplayName.LocalizedLabels.length > 0 ){
+      $("#select-attributes").append(new Option(attribute.DisplayName.LocalizedLabels[0].Label,attribute.LogicalName));
+    }
+  });
+}
+
+
